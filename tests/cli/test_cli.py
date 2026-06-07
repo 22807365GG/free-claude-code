@@ -690,6 +690,16 @@ class TestCLISession:
             def get_launcher_binary_name(self, settings: Any) -> str:
                 return self.default_binary
 
+            def build_launcher_command(
+                self,
+                *,
+                binary_path: str,
+                argv: Iterable[str],
+                settings: Any,
+                proxy_root_url: str,
+            ) -> list[str]:
+                return [binary_path, *argv]
+
             def build_launcher_env(
                 self,
                 *,

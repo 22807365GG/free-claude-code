@@ -20,6 +20,7 @@ from api.admin_urls import local_admin_url, local_proxy_root_url
 from api.app import GracefulLifespanApp, create_app
 from cli.adapters.base import ClientCliAdapter
 from cli.adapters.claude import CLAUDE_CLI_ADAPTER
+from cli.adapters.codex import CODEX_CLI_ADAPTER
 from cli.process_registry import (
     kill_all_best_effort,
     kill_pid_tree_best_effort,
@@ -209,6 +210,12 @@ def launch_claude(argv: Sequence[str] | None = None) -> None:
     _launch_client_cli(CLAUDE_CLI_ADAPTER, argv)
 
 
+def launch_codex(argv: Sequence[str] | None = None) -> None:
+    """Launch Codex CLI with Free Claude Code proxy configuration."""
+
+    _launch_client_cli(CODEX_CLI_ADAPTER, argv)
+
+
 def _launch_client_cli(
     adapter: ClientCliAdapter, argv: Sequence[str] | None = None
 ) -> None:
@@ -235,7 +242,12 @@ def _launch_client_cli(
         print(adapter.install_hint, file=sys.stderr)
         raise SystemExit(127)
 
-    command = [client_command, *args]
+    command = adapter.build_launcher_command(
+        binary_path=client_command,
+        argv=args,
+        settings=settings,
+        proxy_root_url=proxy_root_url,
+    )
     env = adapter.build_launcher_env(
         proxy_root_url=proxy_root_url,
         auth_token=settings.anthropic_auth_token,

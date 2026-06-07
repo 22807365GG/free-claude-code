@@ -121,6 +121,18 @@ class ClaudeCliAdapter:
         configured = getattr(settings, "claude_cli_bin", "")
         return configured or self.default_binary
 
+    def build_launcher_command(
+        self,
+        *,
+        binary_path: str,
+        argv: Iterable[str],
+        settings: Any,
+        proxy_root_url: str,
+    ) -> list[str]:
+        """Return the Claude wrapper command without changing user arguments."""
+
+        return [binary_path, *argv]
+
     def build_launcher_env(
         self,
         *,

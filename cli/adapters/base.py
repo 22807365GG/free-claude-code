@@ -67,6 +67,17 @@ class ClientCliAdapter(Protocol):
         """Return the configured executable name for a wrapper entrypoint."""
         ...
 
+    def build_launcher_command(
+        self,
+        *,
+        binary_path: str,
+        argv: Iterable[str],
+        settings: Any,
+        proxy_root_url: str,
+    ) -> list[str]:
+        """Build the wrapper subprocess command for a client CLI launch."""
+        ...
+
     def build_launcher_env(
         self,
         *,
